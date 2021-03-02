@@ -1,0 +1,78 @@
+﻿using Nemerle.Collections;
+using Nemerle.Text;
+using Nemerle.Utility;
+
+using System;
+using System.Collections.Generic;
+using System.Console;
+using System.Linq;
+
+module Program
+{
+  Main() : void
+  { 
+  	def f = ReadLine();
+    def folder = System.IO.DirectoryInfo(f);
+    def files = folder.GetFiles("*.vm");
+  	def outputFile = System.IO.StreamWriter(folder.FullName + "\\" +                           folder.Name + ".asm");   	
+  	foreach( path in files) 
+  	{
+  	  //  Console.WriteLine(path.FullName);
+  	    def sr = System.IO.StreamReader(path.FullName);
+  	    mutable SumOfPurchases = 0;
+  	    mutable SumOfSales = 0;
+
+  	    while (!sr.EndOfStream)
+
+        {
+
+            def newLine = sr.ReadLine();
+            def splits= newLine.Split();
+            when(newLine.StartsWith("buy")){
+                HandleBuy(splits[1],splits[2],splits[3]);
+                SumOfPurchases =  splits[2]*splits[3];
+            }
+            when(newLine.StartsWith("sell")){
+                HandleSell(splits[1],splits[2],splits[3]);
+                SumOfSales =  splits[2]*splits[3];
+
+            }
+            
+  }
+                  Console.WriteLine("sum of purhcases:{0}\n sum of sales{1}".format(SumOfPurchases,SumOfSales)); // missing format
+
+
+  }
+
+
+  	    
+  	}
+  	 HandleBuy(ProductName:string,Amount:string,Price:string) : Void
+  {
+      using (sw = File.AppendText(outputFile))
+
+ {
+
+     sw.WriteLine("### BUY {0}###".format(ProductName));
+     sw.WriteLine("{0}*{1} ".format(Amount,Price));
+
+
+}
+  }
+    	 HandleSell(ProductName:string,Amount:string,Price:string) : Void
+  {
+      using (sw = File.AppendText(outputFile))
+
+ {
+
+     sw.WriteLine("$$$ SELL {0}$$$".format(ProductName));
+     sw.WriteLine("{0}*{1} ".format(Amount,Price));
+
+
+}
+  }
+    _ = ReadLine();
+  }
+  
+  
+}
